@@ -540,3 +540,159 @@ export interface ListingRecommendation {
   matchReasons: string[];
   createdAt: string;
 }
+
+// Phase 3B: Environmental Impact & Analytics Types
+export interface MonthlyTrendPoint {
+  month: string;
+  collectedKg: number;
+  recycledKg: number;
+  co2AvoidedKg: number;
+  landfillDivertedKg: number;
+  transactionsCount: number;
+  receiptsCount: number;
+}
+
+export interface CategoryAnalyticsPoint {
+  categoryId: number;
+  categoryName: string;
+  categorySlug: string;
+  collectedKg: number;
+  recycledKg: number;
+  co2Factor?: number | null;
+  co2AvoidedKg?: number | null;
+  landfillDivertedKg: number;
+  isFactorConfigured: boolean;
+  sourceReference: string;
+}
+
+export interface ProcessorAnalyticsPoint {
+  processorId: number;
+  companyName: string;
+  licenseNumber: string;
+  recycledKg: number;
+  receiptsCount: number;
+  co2AvoidedKg?: number | null;
+  landfillDivertedKg: number;
+}
+
+export interface CategoryImpact {
+  categoryId: number;
+  categoryName: string;
+  quantityProcessedKg: number;
+  co2FactorKgPerUnit?: number | null;
+  landfillDiversionRate: number;
+  co2AvoidedKg?: number | null;
+  landfillDivertedKg: number;
+  sourceReference: string;
+  isFactorConfigured: boolean;
+}
+
+export interface AdminOverviewStats {
+  totalWasteCollectedKg: number;
+  totalWasteRecycledKg: number;
+  totalCo2AvoidedKg?: number | null;
+  totalCo2AvoidedMt?: number | null;
+  totalLandfillDivertedKg: number;
+  completedTransactionsCount: number;
+  confirmedReceiptsCount: number;
+  activeGeneratorsCount: number;
+  activeCollectorsCount: number;
+  activeProcessorsCount: number;
+  disclaimer: string;
+}
+
+export interface WasteCollectionAnalytics {
+  totalCollectedKg: number;
+  completedTransactionsCount: number;
+  totalTransactionValue: number;
+  categoryBreakdown: CategoryAnalyticsPoint[];
+  monthlyTrends: MonthlyTrendPoint[];
+  startDate?: string | null;
+  endDate?: string | null;
+}
+
+export interface RecyclingAnalytics {
+  totalRecycledKg: number;
+  confirmedReceiptsCount: number;
+  activeFacilitiesCount: number;
+  categoryBreakdown: CategoryAnalyticsPoint[];
+  processorBreakdown: ProcessorAnalyticsPoint[];
+  monthlyTrends: MonthlyTrendPoint[];
+  startDate?: string | null;
+  endDate?: string | null;
+}
+
+export interface EnvironmentalImpactResponse {
+  totalRecycledKg: number;
+  totalCo2AvoidedKg?: number | null;
+  totalCo2AvoidedMt?: number | null;
+  totalLandfillDivertedKg: number;
+  categoryImpacts: CategoryImpact[];
+  unconfiguredCategories: string[];
+  methodology: string;
+  disclaimer: string;
+}
+
+export interface GeneratorAnalyticsResponse {
+  generatorId: number;
+  totalListedKg: number;
+  totalTransactedKg: number;
+  completedTransactionsCount: number;
+  totalEarnings: number;
+  categoryDistribution: CategoryAnalyticsPoint[];
+  confirmedRecycledKg: number;
+  estimatedCo2AvoidedKg?: number | null;
+  estimatedCo2AvoidedMt?: number | null;
+  estimatedLandfillDivertedKg: number;
+  monthlyTrends: MonthlyTrendPoint[];
+  disclaimer: string;
+}
+
+export interface CollectorAnalyticsResponse {
+  collectorId: number;
+  totalCollectedKg: number;
+  completedPickupsCount: number;
+  totalCollectedValue: number;
+  totalDeliveredToProcessorsKg: number;
+  processorReceiptsCount: number;
+  categoryDistribution: CategoryAnalyticsPoint[];
+  monthlyTrends: MonthlyTrendPoint[];
+}
+
+export interface ProcessorAnalyticsResponse {
+  processorProfileId: number;
+  companyName: string;
+  totalProcessedKg: number;
+  confirmedReceiptsCount: number;
+  maxCapacityKg: number;
+  currentLoadKg: number;
+  capacityUtilizationPercent: number;
+  estimatedCo2AvoidedKg?: number | null;
+  estimatedCo2AvoidedMt?: number | null;
+  estimatedLandfillDivertedKg: number;
+  categoryDistribution: CategoryAnalyticsPoint[];
+  monthlyTrends: MonthlyTrendPoint[];
+  disclaimer: string;
+}
+
+export interface EmissionFactor {
+  id: number;
+  categoryId: number;
+  categoryName: string;
+  co2FactorKgPerUnit?: number | null;
+  landfillDiversionRate: number;
+  unit: string;
+  sourceReference: string;
+  methodologyNotes?: string | null;
+  effectiveFrom: string;
+  effectiveTo?: string | null;
+  isActive: boolean;
+}
+
+export interface UpdateEmissionFactorRequest {
+  co2FactorKgPerUnit?: number;
+  landfillDiversionRate: number;
+  sourceReference: string;
+  methodologyNotes?: string;
+  isActive?: boolean;
+}

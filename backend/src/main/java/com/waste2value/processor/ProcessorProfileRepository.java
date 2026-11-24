@@ -29,4 +29,6 @@ public interface ProcessorProfileRepository extends JpaRepository<ProcessorProfi
     Page<ProcessorProfile> findByIsVerifiedTrue(Pageable pageable);
 
     Page<ProcessorProfile> findByIsVerifiedFalse(Pageable pageable);
+
+    long countByIsVerifiedTrue();
 }

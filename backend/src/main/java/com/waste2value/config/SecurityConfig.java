@@ -138,6 +138,17 @@ public class SecurityConfig {
                         // Public Image File serving
                         .requestMatchers(HttpMethod.GET, "/api/v1/files/**").permitAll()
 
+                        // Public Environmental Analytics & Transparency endpoints
+                        .requestMatchers(HttpMethod.GET, "/api/v1/analytics/trends").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/analytics/categories").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/analytics/factors").permitAll()
+
+                        // Role-specific Analytics endpoints
+                        .requestMatchers("/api/v1/analytics/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/analytics/generator/**").hasRole("GENERATOR")
+                        .requestMatchers("/api/v1/analytics/collector/**").hasRole("COLLECTOR")
+                        .requestMatchers("/api/v1/analytics/processor/**").hasRole("PROCESSOR")
+
                         // Swagger / OpenAPI documentation
                         .requestMatchers(
                                 "/v3/api-docs/**",

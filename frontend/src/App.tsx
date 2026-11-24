@@ -11,6 +11,7 @@ import { BrowseWastePage } from './pages/public/BrowseWastePage';
 import { ListingDetailPage } from './pages/public/ListingDetailPage';
 import { LoginPage } from './pages/public/LoginPage';
 import { RegisterPage } from './pages/public/RegisterPage';
+import { EnvironmentalDashboardPage } from './pages/public/EnvironmentalDashboardPage';
 
 // Generator pages
 import { GeneratorDashboardPage } from './pages/generator/GeneratorDashboardPage';
@@ -53,6 +54,7 @@ export const App: React.FC = () => {
               {/* Public Routes */}
               <Route path="/" element={<LandingPage />} />
               <Route path="/browse" element={<BrowseWastePage />} />
+              <Route path="/environmental-impact" element={<EnvironmentalDashboardPage />} />
               <Route path="/listings/:id" element={<ListingDetailPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />

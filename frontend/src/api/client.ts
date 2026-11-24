@@ -17,7 +17,18 @@ import {
   UserSummary,
   CollectorRecommendation,
   ProcessorRecommendation,
-  ListingRecommendation
+  ListingRecommendation,
+  AdminOverviewStats,
+  WasteCollectionAnalytics,
+  RecyclingAnalytics,
+  EnvironmentalImpactResponse,
+  GeneratorAnalyticsResponse,
+  CollectorAnalyticsResponse,
+  ProcessorAnalyticsResponse,
+  MonthlyTrendPoint,
+  CategoryAnalyticsPoint,
+  EmissionFactor,
+  UpdateEmissionFactorRequest
 } from '../types';
 
 const api = axios.create({
@@ -277,4 +288,69 @@ export const matchingApi = {
     const res = await api.get<ApiResponse<ListingRecommendation[]>>('/matching/processors/me/recommended-listings');
     return res.data.data;
   },
+};
+
+export const analyticsApi = {
+  getAdminOverview: async (startDate?: string, endDate?: string) => {
+    const res = await api.get<ApiResponse<AdminOverviewStats>>('/analytics/admin/overview', {
+      params: { startDate: startDate || undefined, endDate: endDate || undefined }
+    });
+    return res.data.data;
+  },
+  getWasteCollectionAnalytics: async (startDate?: string, endDate?: string, categoryId?: number) => {
+    const res = await api.get<ApiResponse<WasteCollectionAnalytics>>('/analytics/admin/waste', {
+      params: { startDate: startDate || undefined, endDate: endDate || undefined, categoryId: categoryId || undefined }
+    });
+    return res.data.data;
+  },
+  getRecyclingAnalytics: async (startDate?: string, endDate?: string, categoryId?: number) => {
+    const res = await api.get<ApiResponse<RecyclingAnalytics>>('/analytics/admin/recycling', {
+      params: { startDate: startDate || undefined, endDate: endDate || undefined, categoryId: categoryId || undefined }
+    });
+    return res.data.data;
+  },
+  getEnvironmentalImpact: async (startDate?: string, endDate?: string, categoryId?: number) => {
+    const res = await api.get<ApiResponse<EnvironmentalImpactResponse>>('/analytics/admin/environmental-impact', {
+      params: { startDate: startDate || undefined, endDate: endDate || undefined, categoryId: categoryId || undefined }
+    });
+    return res.data.data;
+  },
+  getGeneratorAnalytics: async (startDate?: string, endDate?: string) => {
+    const res = await api.get<ApiResponse<GeneratorAnalyticsResponse>>('/analytics/generator/me', {
+      params: { startDate: startDate || undefined, endDate: endDate || undefined }
+    });
+    return res.data.data;
+  },
+  getCollectorAnalytics: async (startDate?: string, endDate?: string) => {
+    const res = await api.get<ApiResponse<CollectorAnalyticsResponse>>('/analytics/collector/me', {
+      params: { startDate: startDate || undefined, endDate: endDate || undefined }
+    });
+    return res.data.data;
+  },
+  getProcessorAnalytics: async (startDate?: string, endDate?: string) => {
+    const res = await api.get<ApiResponse<ProcessorAnalyticsResponse>>('/analytics/processor/me', {
+      params: { startDate: startDate || undefined, endDate: endDate || undefined }
+    });
+    return res.data.data;
+  },
+  getMonthlyTrends: async (startDate?: string, endDate?: string) => {
+    const res = await api.get<ApiResponse<MonthlyTrendPoint[]>>('/analytics/trends', {
+      params: { startDate: startDate || undefined, endDate: endDate || undefined }
+    });
+    return res.data.data;
+  },
+  getCategoryAnalytics: async (startDate?: string, endDate?: string) => {
+    const res = await api.get<ApiResponse<CategoryAnalyticsPoint[]>>('/analytics/categories', {
+      params: { startDate: startDate || undefined, endDate: endDate || undefined }
+    });
+    return res.data.data;
+  },
+  getEmissionFactors: async () => {
+    const res = await api.get<ApiResponse<EmissionFactor[]>>('/analytics/factors');
+    return res.data.data;
+  },
+  updateEmissionFactor: async (id: number, data: UpdateEmissionFactorRequest) => {
+    const res = await api.put<ApiResponse<EmissionFactor>>(`/analytics/admin/factors/${id}`, data);
+    return res.data.data;
+  }
 };
