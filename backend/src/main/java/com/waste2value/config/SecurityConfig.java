@@ -149,6 +149,9 @@ public class SecurityConfig {
                         // Actuator
                         .requestMatchers("/actuator/**").permitAll()
 
+                        // Collector route optimization endpoints
+                        .requestMatchers("/api/v1/routes/**").hasRole("COLLECTOR")
+
                         // Generator listings endpoint (must precede generic rules)
                         .requestMatchers("/api/v1/listings/my").hasRole("GENERATOR")
 

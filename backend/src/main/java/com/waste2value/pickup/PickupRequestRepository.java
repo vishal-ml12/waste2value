@@ -35,4 +35,13 @@ public interface PickupRequestRepository extends JpaRepository<PickupRequest, Lo
 
     @Query("SELECT pr FROM PickupRequest pr WHERE pr.listing.id = :listingId AND pr.status = 'ACCEPTED'")
     Optional<PickupRequest> findAcceptedRequestByListingId(@Param("listingId") Long listingId);
+
+    @Query("SELECT pr FROM PickupRequest pr " +
+           "JOIN FETCH pr.listing l " +
+           "JOIN FETCH l.address a " +
+           "JOIN FETCH l.category c " +
+           "JOIN FETCH l.generator g " +
+           "WHERE pr.collector.id = :collectorId AND pr.status = 'ACCEPTED' " +
+           "ORDER BY pr.requestedAt ASC")
+    List<PickupRequest> findAcceptedPickupsForCollectorWithDetails(@Param("collectorId") Long collectorId);
 }
