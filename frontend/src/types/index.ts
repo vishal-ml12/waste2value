@@ -696,3 +696,82 @@ export interface UpdateEmissionFactorRequest {
   methodologyNotes?: string;
   isActive?: boolean;
 }
+
+// Phase 3C: Route Planning & Optimization Types
+export interface LocationDto {
+  name: string;
+  addressLine1?: string | null;
+  addressLine2?: string | null;
+  city?: string | null;
+  state?: string | null;
+  postalCode?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  isValidCoordinate: boolean;
+}
+
+export interface PickupStopResponse {
+  stopSequence: number;
+  pickupRequestId: number;
+  listingId: number;
+  listingTitle: string;
+  categoryName: string;
+  categorySlug: string;
+  quantity: number;
+  unit: string;
+  proposedPrice: number;
+  generatorId?: number | null;
+  generatorName: string;
+  generatorPhone?: string | null;
+  addressLine1?: string | null;
+  addressLine2?: string | null;
+  city?: string | null;
+  state?: string | null;
+  postalCode?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  hasValidCoordinates: boolean;
+  coordinateStatusMessage: string;
+  legDistanceKm?: number | null;
+  cumulativeDistanceKm?: number | null;
+  isCoLocated: boolean;
+  coLocatedStopSequence?: number | null;
+  status: string;
+  requestedAt: string;
+}
+
+export interface RoutePlanResponse {
+  collectorId: number;
+  collectorName: string;
+  isCollectorVerified: boolean;
+  startLocation: LocationDto;
+  totalStopsCount: number;
+  mappableStopsCount: number;
+  unmappableStopsCount: number;
+  totalEstimatedDistanceKm: number;
+  returnLegDistanceKm?: number | null;
+  roundTrip: boolean;
+  routingMode: string;
+  algorithm: string;
+  disclaimer: string;
+  stops: PickupStopResponse[];
+  generatedAt: string;
+}
+
+export interface OptimizeRouteRequest {
+  startLatitude?: number;
+  startLongitude?: number;
+  startAddress?: string;
+  roundTrip?: boolean;
+}
+
+export interface RouteSummaryResponse {
+  collectorId: number;
+  acceptedPickupsCount: number;
+  stopsWithCoordinatesCount: number;
+  stopsMissingCoordinatesCount: number;
+  estimatedTotalDistanceKm: number;
+  depotCity: string;
+  routingMode: string;
+  disclaimer: string;
+}

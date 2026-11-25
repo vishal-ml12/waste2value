@@ -28,7 +28,11 @@ import {
   MonthlyTrendPoint,
   CategoryAnalyticsPoint,
   EmissionFactor,
-  UpdateEmissionFactorRequest
+  UpdateEmissionFactorRequest,
+  RoutePlanResponse,
+  PickupStopResponse,
+  OptimizeRouteRequest,
+  RouteSummaryResponse
 } from '../types';
 
 const api = axios.create({
@@ -353,4 +357,30 @@ export const analyticsApi = {
     const res = await api.put<ApiResponse<EmissionFactor>>(`/analytics/admin/factors/${id}`, data);
     return res.data.data;
   }
+};
+
+export const routingApi = {
+  getPlan: async (startLat?: number, startLon?: number, startAddress?: string, roundTrip?: boolean) => {
+    const res = await api.get<ApiResponse<RoutePlanResponse>>('/routes/collectors/me/plan', {
+      params: {
+        startLat: startLat || undefined,
+        startLon: startLon || undefined,
+        startAddress: startAddress || undefined,
+        roundTrip: roundTrip !== undefined ? roundTrip : undefined,
+      },
+    });
+    return res.data.data;
+  },
+  getStops: async () => {
+    const res = await api.get<ApiResponse<PickupStopResponse[]>>('/routes/collectors/me/stops');
+    return res.data.data;
+  },
+  optimize: async (data?: OptimizeRouteRequest) => {
+    const res = await api.post<ApiResponse<RoutePlanResponse>>('/routes/collectors/me/optimize', data || {});
+    return res.data.data;
+  },
+  getSummary: async () => {
+    const res = await api.get<ApiResponse<RouteSummaryResponse>>('/routes/collectors/me/summary');
+    return res.data.data;
+  },
 };

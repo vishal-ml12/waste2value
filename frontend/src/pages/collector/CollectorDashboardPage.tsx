@@ -6,9 +6,10 @@ import { RecommendedListingsFeed } from '../../components/matching/RecommendedLi
 import { DateRangeFilter } from '../../components/analytics/DateRangeFilter';
 import { MonthlyTrendChart } from '../../components/analytics/MonthlyTrendChart';
 import { CategoryDistributionTable } from '../../components/analytics/CategoryDistributionTable';
+import { RouteOptimizationPanel } from '../../components/routing/RouteOptimizationPanel';
 
 export const CollectorDashboardPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'OPERATIONS' | 'ANALYTICS'>('OPERATIONS');
+  const [activeTab, setActiveTab] = useState<'OPERATIONS' | 'ROUTING' | 'ANALYTICS'>('OPERATIONS');
   const [stats, setStats] = useState<CollectorDashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -72,6 +73,13 @@ export const CollectorDashboardPage: React.FC = () => {
           <p className="text-sm text-gray-500 mt-1">Manage waste collection routes, pickup requests, and downstream processor deliveries</p>
         </div>
         <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => setActiveTab('ROUTING')}
+            className="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-semibold hover:bg-emerald-700 shadow-sm transition flex items-center gap-1.5"
+          >
+            <span>🚚</span>
+            <span>Plan Route</span>
+          </button>
           <Link
             to="/collector/profile"
             className="px-4 py-2 border border-gray-300 text-gray-700 bg-white rounded-lg text-sm font-medium hover:bg-gray-50 shadow-sm"
@@ -80,7 +88,7 @@ export const CollectorDashboardPage: React.FC = () => {
           </Link>
           <Link
             to="/browse"
-            className="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 shadow-sm transition-colors"
+            className="px-4 py-2 border border-gray-300 text-gray-700 bg-white rounded-lg text-sm font-medium hover:bg-gray-50 shadow-sm transition-colors"
           >
             Browse Waste Listings
           </Link>
@@ -100,6 +108,22 @@ export const CollectorDashboardPage: React.FC = () => {
           Operations & Pickups
         </button>
         <button
+          onClick={() => setActiveTab('ROUTING')}
+          className={`py-3 px-6 text-sm font-semibold border-b-2 transition flex items-center gap-2 ${
+            activeTab === 'ROUTING'
+              ? 'border-emerald-600 text-emerald-700'
+              : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
+          }`}
+        >
+          <span>🚚</span>
+          <span>Route Optimization</span>
+          {stats && stats.acceptedPickupsCount > 0 && (
+            <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+              {stats.acceptedPickupsCount}
+            </span>
+          )}
+        </button>
+        <button
           onClick={() => setActiveTab('ANALYTICS')}
           className={`py-3 px-6 text-sm font-semibold border-b-2 transition flex items-center gap-2 ${
             activeTab === 'ANALYTICS'
@@ -112,7 +136,7 @@ export const CollectorDashboardPage: React.FC = () => {
         </button>
       </div>
 
-      {activeTab === 'OPERATIONS' ? (
+      {activeTab === 'OPERATIONS' && (
         <>
           {error && (
             <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700">
@@ -135,6 +159,30 @@ export const CollectorDashboardPage: React.FC = () => {
             </div>
           )}
 
+          {/* Route Planning Action Banner if accepted pickups exist */}
+          {stats && stats.acceptedPickupsCount > 0 && (
+            <div className="bg-gradient-to-r from-emerald-600 to-teal-700 rounded-xl p-5 text-white shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/20 text-white text-[11px] font-semibold">
+                  <span>🗺️</span>
+                  <span>Smart Route Optimization Available</span>
+                </div>
+                <h3 className="text-base font-bold">
+                  You have {stats.acceptedPickupsCount} accepted pickup stop{stats.acceptedPickupsCount > 1 ? 's' : ''} ready for collection!
+                </h3>
+                <p className="text-xs text-emerald-100">
+                  Run TSP Nearest-Neighbor with 2-Opt local search to sequence your stops and minimize travel distance.
+                </p>
+              </div>
+              <button
+                onClick={() => setActiveTab('ROUTING')}
+                className="px-4 py-2 bg-white text-emerald-800 hover:bg-emerald-50 rounded-lg text-xs font-bold shadow-sm transition whitespace-nowrap self-start sm:self-auto"
+              >
+                Open Route Planner →
+              </button>
+            </div>
+          )}
+
           {/* Metrics Grid */}
           {stats && (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -147,9 +195,12 @@ export const CollectorDashboardPage: React.FC = () => {
               <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
                 <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Accepted Pickups</span>
                 <div className="text-2xl font-bold text-emerald-600 mt-2">{stats.acceptedPickupsCount}</div>
-                <Link to="/collector/requests" className="text-[11px] text-emerald-700 underline mt-1 block hover:text-emerald-800">
-                  View active pickups →
-                </Link>
+                <button
+                  onClick={() => setActiveTab('ROUTING')}
+                  className="text-[11px] text-emerald-700 underline mt-1 block hover:text-emerald-800 font-semibold"
+                >
+                  Plan Collection Route →
+                </button>
               </div>
 
               <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
@@ -259,8 +310,15 @@ export const CollectorDashboardPage: React.FC = () => {
             )}
           </div>
         </>
-      ) : (
-        /* Collection Trends & Offsets Tab */
+      )}
+
+      {/* Route Optimization Tab */}
+      {activeTab === 'ROUTING' && (
+        <RouteOptimizationPanel />
+      )}
+
+      {/* Collection Trends & Offsets Tab */}
+      {activeTab === 'ANALYTICS' && (
         <div className="space-y-6">
           <DateRangeFilter
             startDate={startDate}
