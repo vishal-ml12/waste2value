@@ -17,4 +17,6 @@ public interface CollectorProfileRepository extends JpaRepository<CollectorProfi
     Page<CollectorProfile> findByIsVerifiedTrue(Pageable pageable);
 
     Page<CollectorProfile> findByIsVerifiedFalse(Pageable pageable);
+
+    long countByIsVerifiedTrue();
 }

@@ -49,6 +49,18 @@ export const Navbar: React.FC = () => {
                 Browse Marketplace
               </Link>
 
+              <Link
+                to="/environmental-impact"
+                className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors flex items-center gap-1 ${
+                  isActive('/environmental-impact')
+                    ? 'text-emerald-700 bg-emerald-50'
+                    : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
+                }`}
+              >
+                <span className="text-emerald-600">🌱</span>
+                <span>Impact</span>
+              </Link>
+
               {/* Generator Links */}
               {isAuthenticated && user?.role === 'GENERATOR' && (
                 <>
